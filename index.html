@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electric Bike Decision Matrix</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Electric Bike Decision Matrix</h1>
+        <p>Find your perfect electric bike based on what matters to you</p>
+    </header>
+
+    <main>
+        <!-- Loading indicator -->
+        <div id="loading-indicator">
+            <div class="spinner"></div>
+            <p>Loading electric bike data...</p>
+        </div>
+        
+        <!-- Error message display -->
+        <div id="error-message" style="display: none;">
+            <h3>Data Loading Error</h3>
+            <p id="error-text"></p>
+            <div class="troubleshooting">
+                <h4>Troubleshooting Tips:</h4>
+                <ol>
+                    <li>Make sure your Google Sheet is published to the web (File > Share > Publish to the web)</li>
+                    <li>Check that your sheet is set to "Anyone with the link can view"</li>
+                    <li>Try refreshing the page or clearing your browser cache</li>
+                </ol>
+                <button id="use-sample-data" class="primary-btn">Use Sample Data Instead</button>
+            </div>
+        </div>
+        
+        <section class="criteria-section">
+            <h2>Select Your Criteria</h2>
+            <p>Check the features that matter to you and adjust their importance:</p>
+            
+            <div class="criteria-grid">
+                <!-- Battery Capacity -->
+                <div class="criterion-card">
+                    <div class="criterion-header">
+                        <label class="toggle">
+                            <input type="checkbox" id="batteryPower-toggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <h3>Battery Capacity (Wh)</h3>
+                    </div>
+                    <input type="range" id="batteryPower-weight" min="1" max="10" value="5" class="slider">
+                    <div class="weight-labels">
+                        <span>Less Important</span>
+                        <span class="weight-value">5</span>
+                        <span>More Important</span>
+                    </div>
+                </div>
+                
+                <!-- Range (Pedal Assist) -->
+                <div class="criterion-card">
+                    <div class="criterion-header">
+                        <label class="toggle">
+                            <input type="checkbox" id="rangePas-toggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <h3>Range - Pedal Assist (miles)</h3>
+                    </div>
+                    <input type="range" id="rangePas-weight" min="1" max="10" value="5" class="slider">
+                    <div class="weight-labels">
+                        <span>Less Important</span>
+                        <span class="weight-value">5</span>
+                        <span>More Important</span>
+                    </div>
+                </div>
+                
+                <!-- Range (Electric) -->
+                <div class="criterion-card">
+                    <div class="criterion-header">
+                        <label class="toggle">
+                            <input type="checkbox" id="rangeElectric-toggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <h3>Range (miles)</h3>
+                    </div>
+                    <input type="range" id="rangeElectric-weight" min="1" max="10" value="5" class="slider">
+                    <div class="weight-labels">
+                        <span>Less Important</span>
+                        <span class="weight-value">5</span>
+                        <span>More Important</span>
+                    </div>
+                </div>
+                
+                <!-- Top Speed -->
+                <div class="criterion-card">
+                    <div class="criterion-header">
+                        <label class="toggle">
+                            <input type="checkbox" id="topSpeed-toggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <h3>Top Speed (mph)</h3>
+                    </div>
+                    <input type="range" id="topSpeed-weight" min="1" max="10" value="5" class="slider">
+                    <div class="weight-labels">
+                        <span>Less Important</span>
+                        <span class="weight-value">5</span>
+                        <span>More Important</span>
+                    </div>
+                </div>
+                
+                <!-- Brakes -->
+                <div class="criterion-card">
+                    <div class="criterion-header">
+                        <label class="toggle">
+                            <input type="checkbox" id="breaks-toggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <h3>Brakes Quality</h3>
+                    </div>
+                    <input type="range" id="breaks-weight" min="1" max="10" value="5" class="slider">
+                    <div class="weight-labels">
+                        <span>Less Important</span>
+                        <span class="weight-value">5</span>
+                        <span>More Important</span>
+                    </div>
+                    <div class="score-info">
+                        <span>Hydraulic = 10/10</span>
+                        <span>Disc = 7/10</span>
+                    </div>
+                </div>
+                
+                <!-- Suspension -->
+                <div class="criterion-card">
+                    <div class="criterion-header">
+                        <label class="toggle">
+                            <input type="checkbox" id="suspension-toggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <h3>Suspension Quality</h3>
+                    </div>
+                    <input type="range" id="suspension-weight" min="1" max="10" value="5" class="slider">
+                    <div class="weight-labels">
+                        <span>Less Important</span>
+                        <span class="weight-value">5</span>
+                        <span>More Important</span>
+                    </div>
+                    <div class="score-info">
+                        <span>Dual = 10/10</span>
+                        <span>Front/Rear = 5/10</span>
+                        <span>None = 0/10</span>
+                    </div>
+                </div>
+                
+                <!-- Popularity (inverse) -->
+                <div class="criterion-card">
+                    <div class="criterion-header">
+                        <label class="toggle">
+                            <input type="checkbox" id="popularity-toggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <h3>Popularity (Inverse)</h3>
+                    </div>
+                    <input type="range" id="popularity-weight" min="1" max="10" value="5" class="slider">
+                    <div class="weight-labels">
+                        <span>Less Important</span>
+                        <span class="weight-value">5</span>
+                        <span>More Important</span>
+                    </div>
+                    <div class="score-info">
+                        <span>Less popular = Higher score</span>
+                    </div>
+                </div>
+                
+                <!-- Rating -->
+                <div class="criterion-card">
+                    <div class="criterion-header">
+                        <label class="toggle">
+                            <input type="checkbox" id="rating-toggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <h3>Customer Rating</h3>
+                    </div>
+                    <input type="range" id="rating-weight" min="1" max="10" value="5" class="slider">
+                    <div class="weight-labels">
+                        <span>Less Important</span>
+                        <span class="weight-value">5</span>
+                        <span>More Important</span>
+                    </div>
+                </div>
+            </div>
+            
+            <button id="calculate-btn" class="primary-btn">Calculate Best Options</button>
+        </section>
+
+        <section class="results-section" style="display: none;">
+            <h2>Results</h2>
+            
+            <div class="chart-container">
+                <h3>Score vs. Price Comparison</h3>
+                <p>Click on any point to view product details</p>
+                <div class="score-price-chart">
+                    <canvas id="scoreChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="top-options">
+                <h3>Top Scoring Electric Bikes</h3>
+                <div id="top-options-grid" class="options-grid"></div>
+            </div>
+            
+            <div class="results-table">
+                <h3>Bikes Ranked by Value</h3>
+                <table id="results-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Bike Model</th>
+                            <th>Score</th>
+                            <th>Price</th>
+                            <th>Value Ratio</th>
+                            <th>Link</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Results will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Product Details Modal -->
+        <div id="product-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn">&times;</span>
+                <div id="modal-product-details"></div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>Electric Bike Decision Matrix Analysis &copy; 2023</p>
+    </footer>
+
+    <!-- JavaScript files -->
+    <script src="js/sample-data.js"></script>
+    <script src="js/data-fetcher.js"></script>
+    <script src="js/chart-utils.js"></script>
+    <script src="js/app.js"></script>
+    
+    <!-- Fallback script for handling data loading errors -->
+    <script>
+        document.getElementById('use-sample-data').addEventListener('click', function() {
+            console.log("Using sample data instead of Google Sheet");
+            
+            // Hide error message
+            document.getElementById('error-message').style.display = 'none';
+            
+            // Create a BikeDecisionMatrix instance with sample data
+            const sampleData = getSampleData();
+            
+            // Create a new instance of BikeDecisionMatrix
+            window.decisionMatrix = new BikeDecisionMatrix(null, sampleData);
+            
+            // Show success message
+            const successMessage = document.createElement('div');
+            successMessage.className = 'success-message';
+            successMessage.innerHTML = '<p>Using sample data. You can now proceed with the analysis.</p>';
+            document.querySelector('main').insertBefore(successMessage, document.querySelector('.criteria-section'));
+            
+            // Auto-hide the message after 5 seconds
+            setTimeout(() => {
+                successMessage.style.display = 'none';
+            }, 5000);
+        });
+    </script>
+</body>
+</html> 
